@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DBManager.Source.Cells
 {
-    internal class Cell<T>
+    internal class Cell<T> : ICell
     {
         public T Value
         {
@@ -15,5 +15,10 @@ namespace DBManager.Source.Cells
         private T _value;
 
         internal Cell(T value) => _value = value;
+
+        public ICell Duplicate()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
