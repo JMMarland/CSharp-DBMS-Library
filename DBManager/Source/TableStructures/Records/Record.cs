@@ -1,4 +1,5 @@
 ﻿using DBManager.Source.Cells;
+using DBManager.Source.Tables;
 using DBManager.Source.UtilityStructures;
 using System;
 using System.Collections.Generic;
@@ -8,10 +9,16 @@ namespace DBManager.Source.TableStructures.Records
 {
     internal class Record
     {
-        public int Length => _cells.Count;
-        
         private List<ICell> _cells = new List<ICell>();
         private TwoWayMap<string, ICell> _cellMap = new TwoWayMap<string, ICell>();
+
+        private Table _containerTable;
+
+        public Table ContainerTable => _containerTable;
+
+        public int Length => _cells.Count;
+
+        public Record(Table containerTable) => _containerTable = containerTable;
 
         private void CheckIfHeadingAlreadyExists(string heading)
         {
@@ -38,11 +45,11 @@ namespace DBManager.Source.TableStructures.Records
 
         public ICell Get(string heading) => _cellMap.Get(heading);
 
-        public ICell GetByIndex(int index) => _cells[index];
+        public ICell GetAt(int index) => _cells[index];
 
         public void Remove(string heading) => ReleaseCell(_cellMap.Get(heading));
 
-        public void RemoveByIndex(int index) => ReleaseCell(_cells[index]);
+        public void RemoveAt(int index) => ReleaseCell(_cells[index]);
 
         private void ReleaseCell(ICell cell)
         {
