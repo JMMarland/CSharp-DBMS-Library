@@ -10,9 +10,13 @@ namespace DBManager.Source.TableStructures.Attributes
     internal class KeyAttribute<T> : IAttribute
     {
         private TwoWayMap<T, KeyCell<T>> _cellMap = new TwoWayMap<T, KeyCell<T>>();
-        private Attribute _baseAttribute;
+        private Attribute<T> _baseAttribute;
 
-        public KeyAttribute(Table containerTable) => _baseAttribute = new Attribute(containerTable);
+        public bool IsKeyAttribute => true;
+
+        public bool IsPrimaryKey => true;
+
+        public KeyAttribute(Table containerTable) => _baseAttribute = new Attribute<T>(containerTable);
 
         private void CheckIfValueAlreadyExists(T value)
         {
@@ -38,6 +42,8 @@ namespace DBManager.Source.TableStructures.Attributes
         }
 
         public KeyCell<T> Get(T value) => _cellMap.Get(value);
+
+        public Cell<T> GetAt(int index) => _baseAttribute.GetAt(index);
 
         public void RemoveAt(int index)
         {
