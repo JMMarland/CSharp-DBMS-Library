@@ -1,5 +1,6 @@
 ﻿using DBManager.Source.Cells;
 using DBManager.Source.Tables;
+using DBManager.Source.TableStructures.Schema;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +11,9 @@ namespace DBManager.Source.TableStructures.Attributes
     {
         private List<Cell<T>> _cells = new List<Cell<T>>();
         private Table _containerTable;
+        private SchemaOwner _owner;
+
+        public SchemaOwner Owner => _owner;
 
         public Table ContainerTable => _containerTable;
 
@@ -19,7 +23,11 @@ namespace DBManager.Source.TableStructures.Attributes
 
         public bool IsPrimaryKey => false;
 
-        public Attribute(Table containerTable) => _containerTable = containerTable;
+        public Attribute(Table containerTable, SchemaOwner owner)
+        {
+            _containerTable = containerTable;
+            _owner = owner;
+        }
 
         public void Add(Cell<T> cell) => _cells.Add(cell);
 

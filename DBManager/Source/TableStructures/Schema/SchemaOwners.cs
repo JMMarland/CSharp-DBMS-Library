@@ -13,10 +13,12 @@ namespace DBManager.Source.TableStructures.Schema
         
         public void AddOwner<T>(string name)
         {
-            SchemaOwner newOwner = new SchemaOwner();
+            SchemaOwner newOwner = new SchemaOwner(this);
             newOwner.Initialise<T>(name);
             StoreOwner(newOwner);
         }
+
+        public SchemaOwner GetOwner(string name) => _ownerMap[name];
 
         public string GetOwnerName(int index) => _owners[index].Name;
 

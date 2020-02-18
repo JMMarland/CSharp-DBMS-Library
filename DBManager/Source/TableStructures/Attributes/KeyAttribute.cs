@@ -1,5 +1,6 @@
 ﻿using DBManager.Source.Cells;
 using DBManager.Source.Tables;
+using DBManager.Source.TableStructures.Schema;
 using DBManager.Source.UtilityStructures;
 using System;
 using System.Collections.Generic;
@@ -12,11 +13,13 @@ namespace DBManager.Source.TableStructures.Attributes
         private TwoWayMap<T, KeyCell<T>> _cellMap = new TwoWayMap<T, KeyCell<T>>();
         private Attribute<T> _baseAttribute;
 
+        public SchemaOwner Owner => _baseAttribute.Owner;
+
         public bool IsKeyAttribute => true;
 
         public bool IsPrimaryKey => true;
 
-        public KeyAttribute(Table containerTable) => _baseAttribute = new Attribute<T>(containerTable);
+        public KeyAttribute(Table containerTable, SchemaOwner owner) => _baseAttribute = new Attribute<T>(containerTable, owner);
 
         private void CheckIfValueAlreadyExists(T value)
         {

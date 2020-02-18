@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DBManager.Source.TableStructures.Schema;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,5 +10,7 @@ namespace DBManager.Source.TableStructures.Attributes
         bool IsKeyAttribute { get; }
 
         bool IsPrimaryKey { get; }
+
+        SchemaOwner Owner { get; }
     }
 }

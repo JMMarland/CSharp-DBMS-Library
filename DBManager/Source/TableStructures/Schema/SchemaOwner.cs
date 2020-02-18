@@ -13,6 +13,9 @@ namespace DBManager.Source.TableStructures.Schema
         private Type _type = null;
 
         private bool _isSet = false;
+        private SchemaOwners _owners;
+
+        public SchemaOwner(SchemaOwners owners) => _owners = owners;
 
         internal void Initialise<T>(string name)
         {

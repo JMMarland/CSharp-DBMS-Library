@@ -1,6 +1,7 @@
 ﻿using DBManager.Source.Cells;
 using DBManager.Source.Tables;
 using DBManager.Source.TableStructures.Attributes;
+using DBManager.Source.TableStructures.Records;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,59 +10,54 @@ namespace DBManager.Source.TableStructures.Schema
 {
     internal class SchemaContainer
     {
-        private SchemaAttributeContainer _attributes = new SchemaAttributeContainer();
-        private SchemaRecordContainer _records = new SchemaRecordContainer();
+        private SchemaOwners _owners;
+        
+        private SchemaAttributeContainer _attributes;
+        private SchemaRecordContainer _records;
 
         private int _maxRecordLength = 0;
 
         private bool _hasPrimaryKey = false;
         private const int _primaryKeyIndex = 0;
 
-        public SchemaContainer(int maxRecordLength) => SetMaxRecordLength(maxRecordLength);
+        public SchemaContainer(SchemaOwners owners, int maxRecordLength)
+        {
+            SetMaxRecordLength(maxRecordLength);
+            _owners = owners;
+            _attributes = new SchemaAttributeContainer(_owners);
+            _records = new SchemaRecordContainer();
+        }
 
         public void SetMaxRecordLength(int maxRecordLength) => _maxRecordLength = maxRecordLength;
 
-        public int AddPrimaryKeyAttr<T>(Table table)
+        private void CheckPrimaryKeyException()
         {
             if (_hasPrimaryKey)
                 throw new NotImplementedException();
-
-            if (_attributes.Count == 0)
-                _attributes.Insert(_primaryKeyIndex, new KeyAttribute<T>(table));
-            else
-                _attributes.Add(new KeyAttribute<T>(table));
-
-            _hasPrimaryKey = true;
-
-            return _primaryKeyIndex;
         }
 
-        public int AddAttribute<T>(Table table)
+        public int AddAttribute(IAttribute attribute)
         {
-            _attributes.Add(new Attribute<T>(table));
+            _attributes.Add(attribute);
             return _attributes.Count - 1;
         }
 
-        public void InsertAttribute<T>(int index, Table table) => _attributes.Insert(index, new Attribute<T>(table));
-
-        public bool RemoveAttribute(IAttribute attribute)
+        public int AddPrimaryKeyAttribute<T>(KeyAttribute<T> attribute)
         {
-            if (attribute.IsPrimaryKey)
-                _hasPrimaryKey = false;
+            CheckPrimaryKeyException();
 
-            return _attributes.Remove(attribute);
-        }
-        
-        public void RemoveAttributeAt(int index)
-        {
-            if (_hasPrimaryKey && index == _primaryKeyIndex)
-                _hasPrimaryKey = false;
-
-            _attributes.RemoveAt(index);
+            _attributes.Insert(_primaryKeyIndex, attribute);
+            return _primaryKeyIndex;
         }
 
-        public IAttribute GetAttributeAt(int index) => _attributes.Get(index);
+        public void InsertAttribute(int index, IAttribute attribute)
+        {
+            if (index == _primaryKeyIndex)
+                CheckPrimaryKeyException();
 
-        public IAttribute GetPrimaryKeyAttr() => _attributes.Get(_primaryKeyIndex);
+            _attributes.Insert(index, attribute);
+        }
+
+        // NEED TO ADD FUNCTIONS TO REMOVE ATTRIBUTES
     }
 }
